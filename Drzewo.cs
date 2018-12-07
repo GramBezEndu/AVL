@@ -91,6 +91,20 @@ namespace AVL
             return root;
         }
 
+        public Wezel Wyszukaj(Wezel korzen, string slowo)
+        {
+            // Base Cases: root is null or key is present at root 
+            if (korzen == null || slowo.CompareTo(korzen.Slowo) == 0)
+                return korzen;
+            //return null;
+            // Key is greater than root's key 
+            if (korzen.Slowo.CompareTo(slowo) < 0)
+                return Wyszukaj(korzen.Prawy, slowo);
+
+            //Key is smaller than root's key 
+            return Wyszukaj(korzen.Lewy, slowo);
+        }
+
         public void WypiszDrzewo(Wezel korzen)
         {
             if (korzen.Lewy != null)
