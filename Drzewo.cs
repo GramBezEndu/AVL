@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -152,7 +152,7 @@ namespace AVL
                     root = wezel;
                     //ustawianie nowych wag
                     root.Waga = 0;
-                    root.Prawy.Waga = 0;
+                    root.Lewy.Waga = 0;
                 }
             }
             Debug.WriteLine("\t\t{0}", slowo);
