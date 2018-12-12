@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,11 +19,13 @@ namespace AVL
             string s = sr.ReadToEnd();
             sr.Close();
             string[] substrings = s.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            for(int i=0;i<substrings.Count();i+=2)
+            bool rotacja = false;
+            for (int i = 0; i < substrings.Count(); i += 2)
             {
                 Debug.WriteLine("\t i={0}, substrings[i]={1}", i, substrings[i]);
-                var ang = a.WstawSlowo(ref a.korzen, substrings[i]);
-                var pl = p.WstawSlowo(ref p.korzen, substrings[i + 1]);
+
+                var ang = a.WstawSlowo(ref a.korzen, substrings[i],ref rotacja);
+                var pl = p.WstawSlowo(ref p.korzen, substrings[i + 1],ref rotacja);
                 ang.Tlumaczenie = pl;
                 pl.Tlumaczenie = ang;
                 Debug.WriteLine(pl.Tlumaczenie.Slowo);
@@ -67,7 +69,7 @@ namespace AVL
         }
         public void closeStreamWriter()
         {
-            if(wr != null)
+            if (wr != null)
             {
                 this.wr.Close();
                 wrInitialised = false;
