@@ -31,42 +31,49 @@ namespace AVL
             element.Prawy.Lewy = II;
         }
 
-        public Wezel WstawSlowo(ref Wezel root, string slowo)
+        public Wezel WstawSlowo(ref Wezel root, string slowo, ref bool CzyBylaRotacja)
         {
-            //int comparison = slowo.CompareTo(root.Slowo);
             if (root == null)
             {
                 root = new Wezel(slowo);
             }
-            //if (this.korzen == null) //gdy drzewo jeszcze nie jest utworzone
-            //{
-            //    this.korzen = new Wezel(slowo);
-            //}
             else if (slowo.CompareTo(root.Slowo) < 0)
             {
                 Wezel lewy = root.Lewy;
-                root.Lewy = WstawSlowo(ref lewy, slowo);
-                root.Waga++;
+                bool rotacja = CzyBylaRotacja;
+                root.Lewy = WstawSlowo(ref lewy, slowo, ref rotacja);
+                CzyBylaRotacja = rotacja;
+                if (CzyBylaRotacja == false) //We wstawianiu rotacja wykona sie tylko raz
+                {
+                    root.Waga++;
+                }
             }
             else if (slowo.CompareTo(root.Slowo) > 0)
             {
                 Wezel prawy = root.Prawy;
-                root.Prawy = WstawSlowo(ref prawy, slowo);
-                if(true) //MUSI JAKOS SPRAWDZAC CZY WYKONALA SIE REKURENCJA CZY NIE
+                bool rotacja = CzyBylaRotacja;
+                root.Prawy = WstawSlowo(ref prawy, slowo, ref rotacja);
+                CzyBylaRotacja = rotacja;
+                if (CzyBylaRotacja==false) //We wstawianiu rotacja wykona sie tylko raz
                 {
                     root.Waga--;
                 }
-               
+
             }
             else
             {
                 throw new Exception("Slowo znajduje sie juz w zbiorze, synonimy sa niedopuszczalne");
+            }
+            if(CzyBylaRotacja)
+            {
+                return root;
             }
             if (root.Waga == 2)
             {
                 if (root.Lewy.Waga == 1)
                 {
                     Wezel wezel = root;
+                    CzyBylaRotacja = true;
                     RotacjaRR(ref wezel);
                     root = (WezelPolski)wezel;
                     //ustawianie nowych wag
@@ -77,6 +84,7 @@ namespace AVL
                 {
                     Wezel C = root.Lewy.Prawy;
                     Wezel wezel = root.Lewy;
+                    CzyBylaRotacja = true;
                     RotacjaLL(ref wezel);
                     root.Lewy = (WezelPolski)wezel;
                     wezel = root;
@@ -111,6 +119,7 @@ namespace AVL
                 {
                     Wezel C = root.Prawy.Lewy;
                     Wezel wezel = root.Prawy;
+                    CzyBylaRotacja = true;
                     RotacjaRR(ref wezel);
                     root.Prawy = (WezelPolski)wezel;
                     wezel = root;
@@ -141,6 +150,7 @@ namespace AVL
                 else
                 {
                     Wezel wezel = root;
+                    CzyBylaRotacja = true;
                     RotacjaLL(ref wezel);
                     //root = (WezelPolski)wezel;
                     root = wezel;
