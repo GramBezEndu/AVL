@@ -68,7 +68,7 @@ namespace AVL
 				{
 					Wezel wezel = root;
 					RotacjaRR(ref wezel);
-					root = (WezelPolski)wezel;
+					root = wezel;
 					//ustawianie nowych wag
 					root.Waga = 0;
 					root.Prawy.Waga = 0;
@@ -78,10 +78,10 @@ namespace AVL
 					Wezel C = root.Lewy.Prawy;
 					Wezel wezel = root.Lewy;
 					RotacjaLL(ref wezel);
-					root.Lewy = (WezelPolski)wezel;
+					root.Lewy = wezel;
 					wezel = root;
 					RotacjaRR(ref wezel);
-					root = (WezelPolski)wezel;
+					root = wezel;
 					//ustawianie nowych wag
 					root.Waga = 0;
 					switch (C.Waga)
@@ -112,10 +112,10 @@ namespace AVL
 					Wezel C = root.Prawy.Lewy;
 					Wezel wezel = root.Prawy;
 					RotacjaRR(ref wezel);
-					root.Prawy = (WezelPolski)wezel;
+					root.Prawy = wezel;
 					wezel = root;
 					RotacjaLL(ref wezel);
-					root = (WezelPolski)wezel;
+					root = wezel;
 					//ustawianie nowych wag
 					root.Waga = 0;
 					switch (C.Waga)
