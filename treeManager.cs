@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +12,9 @@ namespace AVL
         DrzewoAngielskie a;
         public void WstawSlowo(string polskie, string angielskie, DrzewoPolskie p, DrzewoAngielskie a)
         {
-            var pl = p.WstawSlowo(ref p.korzen, polskie);
-            var ang = a.WstawSlowo(ref a.korzen, angielskie);
+            bool rotacja = false;
+            var pl = p.WstawSlowo(ref p.korzen, polskie,ref rotacja);
+            var ang = a.WstawSlowo(ref a.korzen, angielskie, ref rotacja);
             pl.Tlumaczenie = ang;
             ang.Tlumaczenie = pl;
         }
