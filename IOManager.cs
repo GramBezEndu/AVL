@@ -22,8 +22,10 @@ namespace AVL
             for(int i=0;i<substrings.Count();i+=2)
             {
                 Debug.WriteLine("\t i={0}, substrings[i]={1}", i, substrings[i]);
-                var ang = a.WstawSlowo(ref a.korzen, substrings[i]);
-                var pl = p.WstawSlowo(ref p.korzen, substrings[i + 1]);
+                a.WstawSlowo(ref a.korzen, substrings[i]);
+				var ang = a.Wyszukaj(a.korzen, substrings[i]);
+                p.WstawSlowo(ref p.korzen, substrings[i + 1]);
+				var pl = p.Wyszukaj(p.korzen, substrings[i + 1]);
                 ang.Tlumaczenie = pl;
                 pl.Tlumaczenie = ang;
                 Debug.WriteLine(pl.Tlumaczenie.Slowo);
