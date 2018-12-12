@@ -31,7 +31,7 @@ namespace AVL
 			element.Prawy.Lewy = II;
 		}
 
-		public Wezel WstawSlowo(ref Wezel root, string slowo)
+/*		public Wezel WstawSlowo(ref Wezel root, string slowo)
 		{
 			//int comparison = slowo.CompareTo(root.Slowo);
 			if (root == null)
@@ -152,7 +152,7 @@ namespace AVL
 			Debug.WriteLine("\t\t{0}", slowo);
 			Debug.WriteLine("\t\t{0}", root.Slowo);
 			return root;
-		}
+		}*/
 
 		public void WypiszDrzewo(Wezel korzen)
         {
@@ -229,5 +229,137 @@ namespace AVL
 		//    Debug.WriteLine("\t\t{0}", root.Slowo);
 		//    return root;
 		//}
+		public Wezel WstawSlowo(ref Wezel root, string slowo, ref bool CzyBylaRotacja)
+		{
+			if (root == null)
+			{
+				root = new Wezel(slowo);
+			}
+			else if (slowo.CompareTo(root.Slowo) < 0)
+			{
+				Wezel lewy = root.Lewy;
+				bool rotacja = CzyBylaRotacja;
+				root.Lewy = WstawSlowo(ref lewy, slowo, ref rotacja);
+				CzyBylaRotacja = rotacja;
+				if (CzyBylaRotacja == false) //We wstawianiu rotacja wykona sie tylko raz
+				{
+					root.Waga++;
+				}
+			}
+			else if (slowo.CompareTo(root.Slowo) > 0)
+			{
+				Wezel prawy = root.Prawy;
+				bool rotacja = CzyBylaRotacja;
+				root.Prawy = WstawSlowo(ref prawy, slowo, ref rotacja);
+				CzyBylaRotacja = rotacja;
+				if (CzyBylaRotacja == false) //We wstawianiu rotacja wykona sie tylko raz
+				{
+					root.Waga--;
+				}
+
+			}
+			else
+			{
+				throw new Exception("Slowo znajduje sie juz w zbiorze, synonimy sa niedopuszczalne");
+			}
+			if (CzyBylaRotacja)
+			{
+				return root;
+			}
+			if (root.Waga == 2)
+			{
+				if (root.Lewy.Waga == 1)
+				{
+					Wezel wezel = root;
+					CzyBylaRotacja = true;
+					RotacjaRR(ref wezel);
+					root = wezel;
+					//ustawianie nowych wag
+					root.Waga = 0;
+					root.Prawy.Waga = 0;
+				}
+				else
+				{
+					Wezel C = root.Lewy.Prawy;
+					Wezel wezel = root.Lewy;
+					CzyBylaRotacja = true;
+					RotacjaLL(ref wezel);
+					root.Lewy = wezel;
+					wezel = root;
+					RotacjaRR(ref wezel);
+					root = wezel;
+					//ustawianie nowych wag
+					root.Waga = 0;
+					switch (C.Waga)
+					{
+						case (1):
+
+							root.Prawy.Waga = 0;
+							root.Lewy.Waga = -1;
+							break;
+						case (0):
+
+							root.Prawy.Waga = 0;
+							root.Lewy.Waga = 0;
+							break;
+						case (-1):
+							root.Prawy.Waga = 0;
+							root.Lewy.Waga = 1;
+							break;
+
+					}
+				}
+			}
+			if (root.Waga == -2)
+			{
+
+				if (root.Prawy.Waga == 1)
+				{
+					Wezel C = root.Prawy.Lewy;
+					Wezel wezel = root.Prawy;
+					CzyBylaRotacja = true;
+					RotacjaRR(ref wezel);
+					root.Prawy = wezel;
+					wezel = root;
+					RotacjaLL(ref wezel);
+					root = wezel;
+					//ustawianie nowych wag
+					root.Waga = 0;
+					switch (C.Waga)
+					{
+						case (1):
+
+							root.Prawy.Waga = 0;
+							root.Lewy.Waga = -1;
+							break;
+						case (0):
+
+							root.Prawy.Waga = 0;
+							root.Lewy.Waga = 0;
+							break;
+						case (-1):
+							root.Prawy.Waga = 0;
+							root.Lewy.Waga = 1;
+							break;
+
+					}
+
+				}
+				else
+				{
+					Wezel wezel = root;
+					CzyBylaRotacja = true;
+					RotacjaLL(ref wezel);
+					//root = (WezelPolski)wezel;
+					root = wezel;
+					//ustawianie nowych wag
+					root.Waga = 0;
+					root.Lewy.Waga = 0;
+				}
+			}
+			Debug.WriteLine("\t\t{0}", slowo);
+			Debug.WriteLine("\t\t{0}", root.Slowo);
+			return root;
+		}
 	}
 }
