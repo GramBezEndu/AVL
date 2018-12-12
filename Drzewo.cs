@@ -241,7 +241,7 @@ namespace AVL
 				bool rotacja = CzyBylaRotacja;
 				root.Lewy = WstawSlowo(ref lewy, slowo, ref rotacja);
 				CzyBylaRotacja = rotacja;
-                if (CzyBylaRotacja == true || root.Lewy.Waga == 0) //We wstawianiu rotacja wykona sie tylko raz
+                if (CzyBylaRotacja == true && root.Lewy.Waga == 0) //We wstawianiu rotacja wykona sie tylko raz
                 {
 
                 }
@@ -256,7 +256,7 @@ namespace AVL
 				bool rotacja = CzyBylaRotacja;
 				root.Prawy = WstawSlowo(ref prawy, slowo, ref rotacja);
 				CzyBylaRotacja = rotacja;
-                if (CzyBylaRotacja == true || root.Prawy.Waga==0) //We wstawianiu rotacja wykona sie tylko raz
+                if (CzyBylaRotacja == true && root.Prawy.Waga==0) //We wstawianiu rotacja wykona sie tylko raz
 				{
 				
 				}
@@ -297,7 +297,6 @@ namespace AVL
 					RotacjaRR(ref wezel);
 					root = wezel;
 					//ustawianie nowych wag
-					root.Waga = 0;
 					switch (C.Waga)
 					{
 						case (1):
@@ -311,12 +310,13 @@ namespace AVL
 							root.Lewy.Waga = 0;
 							break;
 						case (-1):
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = 1;
+							root.Prawy.Waga = 1;
+							root.Lewy.Waga = 0;
 							break;
 
 					}
-				}
+                    root.Waga = 0;
+                }
 			}
 			if (root.Waga == -2)
 			{
@@ -332,27 +332,27 @@ namespace AVL
 					RotacjaLL(ref wezel);
 					root = wezel;
 					//ustawianie nowych wag
-					root.Waga = 0;
 					switch (C.Waga)
 					{
-						case (1):
+                        case (1):
 
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = -1;
-							break;
-						case (0):
+                            root.Prawy.Waga = 0;
+                            root.Lewy.Waga = -1;
+                            break;
+                        case (0):
 
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = 0;
-							break;
-						case (-1):
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = 1;
-							break;
+                            root.Prawy.Waga = 0;
+                            root.Lewy.Waga = 0;
+                            break;
+                        case (-1):
+                            root.Prawy.Waga = 1;
+                            root.Lewy.Waga = 0;
+                            break;
 
-					}
+                    }
+                    root.Waga = 0;
 
-				}
+                }
 				else
 				{
 					Wezel wezel = root;
