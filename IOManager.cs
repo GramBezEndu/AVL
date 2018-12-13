@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,12 +18,17 @@ namespace AVL
             sr = new StreamReader("InOut0401.txt");
             string s = sr.ReadToEnd();
             sr.Close();
-            string[] substrings = s.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+			bool rotacja = false;
+
+			string[] substrings = s.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             for(int i=0;i<substrings.Count();i+=2)
             {
+                rotacja = false;
                 Debug.WriteLine("\t i={0}, substrings[i]={1}", i, substrings[i]);
-                var ang = a.WstawSlowo(ref a.korzen, substrings[i]);
-                var pl = p.WstawSlowo(ref p.korzen, substrings[i + 1]);
+                a.WstawSlowo(ref a.korzen, substrings[i], ref rotacja);
+				var ang = a.Wyszukaj(a.korzen, substrings[i]);
+                p.WstawSlowo(ref p.korzen, substrings[i + 1], ref rotacja);
+				var pl = p.Wyszukaj(p.korzen, substrings[i + 1]);
                 ang.Tlumaczenie = pl;
                 pl.Tlumaczenie = ang;
                 Debug.WriteLine(pl.Tlumaczenie.Slowo);
