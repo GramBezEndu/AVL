@@ -58,34 +58,28 @@ namespace AVL
 			return Wyszukaj(korzen.Lewy, slowo);
 		}
 
-        public Wezel WyszukajNastepce(ref Wezel korzen)
+        public Wezel WyszukajNastepce(Wezel korzen)
         {
             Wezel nastepca = korzen.Prawy;
             while(nastepca.Lewy!=null)
             {
-                if (nastepca.Lewy.Slowo.CompareTo(korzen.Slowo) == 0) //przyda sie przy usuwaniu starej pozycji nastepnika
-                    break;
                 nastepca = nastepca.Lewy;
             }
             return nastepca;
         }
 
-        public void UsunSlowo(ref Wezel korzen, string slowo,ref bool ZnalezionoElement, ref bool DrzewoWywazone)
+        public void UsunSlowo(ref Wezel korzen, string slowo,ref bool ZnalezionoElement, ref bool DrzewoWywazone,Wezel tlumaczenia)
         {
 
             //Wyszukaj powinno zwracac czy slowo nieistnieje
-
-            if (korzen == null || slowo.CompareTo(korzen.Slowo) == 0)
+            if(korzen == null)
+            {
+                throw new Exception("Nie znaleziono slowa");
+            }
+            if (slowo.CompareTo(korzen.Slowo) == 0) //uwazac na tego bydlaka!
             {
 
                 ZnalezionoElement = true;
-                if (korzen.Prawy == null && korzen.Lewy == null)
-                {
-                    //przypadek gdy usuwany element jest lisciem
-                    korzen = null;
-                    //NALEZY USUNAC TEZ TLUMACZENIE
-                    //throw new NotImplementedException();
-                }
                 return;
             }
             // Key is greater than root's key   
@@ -94,20 +88,17 @@ namespace AVL
                 Wezel lewy = korzen.Lewy;
                 bool element = ZnalezionoElement;
                 bool wywazenie = DrzewoWywazone;
-                UsunSlowo(ref lewy, slowo,ref element, ref wywazenie);
+                UsunSlowo(ref lewy, slowo,ref element, ref wywazenie,tlumaczenia);
+                korzen.Lewy = lewy;
                 DrzewoWywazone = wywazenie;
                 ZnalezionoElement = element;
                 if(!DrzewoWywazone)
                 {
-
-                    if (korzen.Lewy.Waga == -1 || korzen.Lewy.Waga == 1)
+                    korzen.Waga--;
+                    if (korzen.Waga == -1 || korzen.Waga == 1)
                     {
                         DrzewoWywazone = true;
                         //dalsze wyważanie nie ma sensu
-                    }
-                    else
-                    {
-                        korzen.Waga--;
                     }
                 }
                     
@@ -115,31 +106,70 @@ namespace AVL
             if (ZnalezionoElement)
             {
                 ZnalezionoElement = false;
-                //Rozpatrujemy przypadek gdy element kasowany nie jest lisciem
-                if(korzen.Lewy.Prawy==null && korzen.Lewy.Lewy!=null)
+                if (korzen.Lewy.Prawy == null && korzen.Lewy.Lewy == null)
                 {
+                    //przypadek gdy usuwany element jest lisciem
+                    string tlumaczenie = korzen.Lewy.Tlumaczenie.Slowo;
+                    korzen.Lewy = null;
+                    if(tlumaczenia!=null)
+                    {
+                        bool znaleziony = false;
+                        bool wywazone = false;
+                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                    }
+                    return;
+                }
+                if (korzen.Lewy.Prawy==null && korzen.Lewy.Lewy!=null)
+                {
+
                     Wezel temp = korzen.Lewy;
-                    ////NALEZY USUNAC TEZ TLUMACZENIE
-                    throw new NotImplementedException();
+                    string tlumaczenie = temp.Tlumaczenie.Slowo;
                     korzen.Lewy = temp.Lewy;
+                    if(tlumaczenia != null)
+                    {
+                        bool znaleziony = false;
+                        bool wywazone = false;
+                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+
+                    }
+                    return;
                 }
                 if (korzen.Lewy.Prawy != null && korzen.Lewy.Lewy == null)
                 {
                     Wezel temp = korzen.Lewy;
-                    ////NALEZY USUNAC TEZ TLUMACZENIE
-                    throw new NotImplementedException();
+                    string tlumaczenie = temp.Tlumaczenie.Slowo;
                     korzen.Lewy = temp.Prawy;
+                    if (tlumaczenia != null)
+                    {
+
+                        bool znaleziony = false;
+                        bool wywazone = false;
+                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+
+                    }
+                    return;
                 }
                 if (korzen.Lewy.Prawy != null && korzen.Lewy.Lewy != null)
                 {
                     Wezel temp = korzen.Lewy;
-                    Wezel nastepnik = WyszukajNastepce(ref temp);
-                    ////NALEZY USUNAC TEZ TLUMACZENIE
-                    throw new NotImplementedException();
-                    Wezel staraPozycjaNastepnika = nastepnik;
-                    Wezel nastepniknastepnika = WyszukajNastepce(ref staraPozycjaNastepnika);
-                    nastepniknastepnika.Lewy = null;
-                    korzen.Lewy = nastepnik;
+                    string tlumaczenie = temp.Tlumaczenie.Slowo;
+                    Wezel nastepnik = WyszukajNastepce(temp);
+                    temp.Slowo = nastepnik.Slowo;
+                    temp.Tlumaczenie = nastepnik.Tlumaczenie;
+                    Wezel nowapozycja = temp.Prawy;
+                    bool znaleziony = false;
+                    bool wywazone = false;
+                    UsunSlowo(ref nowapozycja, nastepnik.Slowo,ref znaleziony,ref wywazone,tlumaczenia);
+                    if (tlumaczenia != null)
+                    {
+
+                        bool znaleziony2 = false;
+                        bool wywazone2 = false;
+                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null);
+
+                    }
+                    korzen.Lewy = temp;
+                    return;
 
                 }
             }
@@ -149,20 +179,17 @@ namespace AVL
                 Wezel prawy = korzen.Prawy;
                 bool element = ZnalezionoElement;
                 bool wywazenie = DrzewoWywazone;
-                UsunSlowo(ref prawy, slowo, ref element, ref wywazenie);
+                UsunSlowo(ref prawy, slowo, ref element, ref wywazenie,tlumaczenia);
+                korzen.Prawy = prawy;
                 DrzewoWywazone = wywazenie;
                 ZnalezionoElement = element;
                 if (!DrzewoWywazone)
                 {
-
-                    if (korzen.Lewy.Waga == -1 || korzen.Lewy.Waga == 1)
+                    korzen.Waga++;
+                    if (korzen.Waga == -1 || korzen.Waga == 1)
                     {
                         DrzewoWywazone = true;
                         //dalsze wyważanie nie ma sensu
-                    }
-                    else
-                    {
-                        korzen.Waga++;
                     }
                 }
             }
@@ -170,35 +197,67 @@ namespace AVL
             if (ZnalezionoElement)
             {
                 ZnalezionoElement = false;
-                //Rozpatrujemy przypadek gdy element kasowany nie jest lisciem
+                if (korzen.Prawy.Prawy == null && korzen.Prawy.Lewy == null)
+                {
+                    //przypadek gdy usuwany element jest lisciem
+                    string tlumaczenie = korzen.Prawy.Tlumaczenie.Slowo;
+                    korzen.Prawy = null;
+                    if (tlumaczenia != null)
+                    {
+                        bool znaleziony = false;
+                        bool wywazone = false;
+                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                    }
+                    return;
+                }
                 if (korzen.Prawy.Prawy == null && korzen.Prawy.Lewy != null)
                 {
                     Wezel temp = korzen.Prawy;
-                    ////NALEZY USUNAC TEZ TLUMACZENIE
-                    throw new NotImplementedException();
+                    string tlumaczenie = korzen.Prawy.Tlumaczenie.Slowo;
                     korzen.Prawy = temp.Lewy;
+                    if (tlumaczenia != null)
+                    {
+                        bool znaleziony = false;
+                        bool wywazone = false;
+                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                    }
+                    return;
                 }
+
                 if (korzen.Prawy.Prawy != null && korzen.Prawy.Lewy == null)
                 {
                     Wezel temp = korzen.Prawy;
-                    ////NALEZY USUNAC TEZ TLUMACZENIE
-                    throw new NotImplementedException();
+                    string tlumaczenie = korzen.Prawy.Tlumaczenie.Slowo;
                     korzen.Prawy = temp.Prawy;
+                    if (tlumaczenia != null)
+                    {
+                        bool znaleziony = false;
+                        bool wywazone = false;
+                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                    }
+                    return;
                 }
                 if (korzen.Prawy.Prawy != null && korzen.Prawy.Lewy != null)
                 {
                     Wezel temp = korzen.Prawy;
-                    Wezel nastepnik = WyszukajNastepce(ref temp);
-                    ////NALEZY USUNAC TEZ TLUMACZENIE
-                    throw new NotImplementedException();
-                    korzen.Prawy.Slowo = nastepnik.Slowo;
-                    //UsunSlowo();
-                    /*Wezel staraPozycjaNastepnika = nastepnik;
+                    string tlumaczenie = temp.Tlumaczenie.Slowo;
+                    Wezel nastepnik = WyszukajNastepce(temp);
+                    temp.Slowo = nastepnik.Slowo;
+                    temp.Tlumaczenie = nastepnik.Tlumaczenie;
+                    Wezel nowapozycja = temp.Prawy;
+                    bool znaleziony = false;
+                    bool wywazone = false;
+                    UsunSlowo(ref nowapozycja, nastepnik.Slowo, ref znaleziony, ref wywazone, tlumaczenia);
+                    if (tlumaczenia != null)
+                    {
 
-                    Wezel nastepniknastepnika = WyszukajNastepce(ref staraPozycjaNastepnika);
-                    nastepniknastepnika.Lewy = null;
-                    korzen.Prawy = nastepnik;*/
-                    
+                        bool znaleziony2 = false;
+                        bool wywazone2 = false;
+                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null);
+
+                    }
+                    korzen.Prawy = temp;
+                    return;
                 }
             }
             //Rotacje (trzeba zrobić z tego oddzielną funkcje IMHO)
