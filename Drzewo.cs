@@ -460,8 +460,8 @@ namespace AVL
 					{
                         case (1):
 
-                            root.Prawy.Waga = 0;
-                            root.Lewy.Waga = -1;
+                            root.Prawy.Waga = -1;
+                            root.Lewy.Waga = 0;
                             break;
                         case (0):
 
@@ -469,8 +469,8 @@ namespace AVL
                             root.Lewy.Waga = 0;
                             break;
                         case (-1):
-                            root.Prawy.Waga = 1;
-                            root.Lewy.Waga = 0;
+                            root.Prawy.Waga = 0;
+                            root.Lewy.Waga = 1;
                             break;
 
                     }
