@@ -16,9 +16,11 @@ namespace AVL
             ioManager.WczytajSlowa(a,p);
             a.WypiszDrzewo(a.korzen);
             Wezel korzen = a.korzen;
+            Wezel root= a.korzen;
             bool znaleziony = false;
             bool wywazone = false;
-            a.UsunSlowo(ref korzen, "thick", ref znaleziony, ref wywazone);
+            a.UsunSlowo(ref korzen, "thick", ref znaleziony, ref wywazone, p.korzen);
+            a.korzen = root;
             a.WypiszDrzewo(a.korzen);
             /*Musze potestować usuwanie
              * 
