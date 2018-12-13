@@ -57,41 +57,14 @@ namespace AVL
 			//Key is smaller than root's key 	
 			return Wyszukaj(korzen.Lewy, slowo);
 		}
-        public Wezel WyszukajSugarDaddy(ref Wezel korzen, string slowo)
-        {   
-            if(slowo.CompareTo(korzen.Slowo)==0)
-            {
-                //korzen nie ma ojca
-                return null;
-            }
-            if(slowo.CompareTo(korzen.Prawy.Slowo)==0|| slowo.CompareTo(korzen.Lewy.Slowo) == 0)
-            {
-                return korzen;
-            }
-            else
-            {
-                if (korzen.Slowo.CompareTo(slowo) < 0)
-                {
-                    Wezel lewy = korzen.Lewy;
-                    WyszukajSugarDaddy(ref lewy, slowo);
-                    
-                }
-                    
-                if (korzen.Slowo.CompareTo(slowo) > 0)
-                {
-                    Wezel prawy = korzen.Prawy;
-                    WyszukajSugarDaddy(ref prawy, slowo);
-                }
-            }
-            throw new Exception("Nie znaleziono ojca dla szukanego elementu");
 
-
-        }
-        public Wezel WyszukajNastepce(Wezel korzen)
+        public Wezel WyszukajNastepce(ref Wezel korzen)
         {
             Wezel nastepca = korzen.Prawy;
             while(nastepca.Lewy!=null)
             {
+                if (nastepca.Lewy.Slowo.CompareTo(korzen.Slowo) == 0) //przyda sie przy usuwaniu starej pozycji nastepnika
+                    break;
                 nastepca = nastepca.Lewy;
             }
             return nastepca;
@@ -111,17 +84,8 @@ namespace AVL
                     //przypadek gdy usuwany element jest lisciem
                     korzen = null;
                     //NALEZY USUNAC TEZ TLUMACZENIE
+                    throw new NotImplementedException();
                 }
-                /*Wezel wezel = korzen;
-                if(WyszukajSugarDaddy(ref wezel,slowo)==null)
-                {
-                    if(korzen.Prawy==null && korzen.Lewy==null)
-                    {
-                        //drzewo jest jednoelementowe
-                        korzen = null;
-                        throw new Exception("Drzewo przestalo istniec");
-                    }
-                }*/
                 return;
             }
             // Key is greater than root's key   
@@ -153,14 +117,175 @@ namespace AVL
                 ZnalezionoElement = false;
                 //Rozpatrujemy przypadek gdy element kasowany nie jest lisciem
                 if(korzen.Lewy.Prawy==null && korzen.Lewy.Lewy!=null)
-                    {
-                        
-                    }
+                {
+                    Wezel temp = korzen.Lewy;
+                    ////NALEZY USUNAC TEZ TLUMACZENIE
+                    throw new NotImplementedException();
+                    korzen.Lewy = temp.Lewy;
+                }
+                if (korzen.Lewy.Prawy != null && korzen.Lewy.Lewy == null)
+                {
+                    Wezel temp = korzen.Lewy;
+                    ////NALEZY USUNAC TEZ TLUMACZENIE
+                    throw new NotImplementedException();
+                    korzen.Lewy = temp.Prawy;
+                }
+                if (korzen.Lewy.Prawy != null && korzen.Lewy.Lewy != null)
+                {
+                    Wezel temp = korzen.Lewy;
+                    Wezel nastepnik = WyszukajNastepce(ref temp);
+                    ////NALEZY USUNAC TEZ TLUMACZENIE
+                    throw new NotImplementedException();
+                    Wezel staraPozycjaNastepnika = nastepnik;
+                    Wezel nastepniknastepnika = WyszukajNastepce(staraPozycjaNastepnika);
+                    nastepniknastepnika.Lewy = null;
+                    korzen.Lewy = nastepnik;
 
+                }
             }
             //Key is smaller than root's key
             if (korzen.Slowo.CompareTo(slowo) > 0)
-                return UsunSlowo(korzen.Lewy, slowo,ZnalezionoElement);
+            {
+                Wezel prawy = korzen.Prawy;
+                bool element = ZnalezionoElement;
+                bool wywazenie = DrzewoWywazone;
+                UsunSlowo(ref prawy, slowo, ref element, ref wywazenie);
+                DrzewoWywazone = wywazenie;
+                ZnalezionoElement = element;
+                if (!DrzewoWywazone)
+                {
+
+                    if (korzen.Lewy.Waga == -1 || korzen.Lewy.Waga == 1)
+                    {
+                        DrzewoWywazone = true;
+                        //dalsze wyważanie nie ma sensu
+                    }
+                    else
+                    {
+                        korzen.Waga++;
+                    }
+                }
+            }
+            //Usuwanie znalezionego elementu
+            if (ZnalezionoElement)
+            {
+                ZnalezionoElement = false;
+                //Rozpatrujemy przypadek gdy element kasowany nie jest lisciem
+                if (korzen.Prawy.Prawy == null && korzen.Prawy.Lewy != null)
+                {
+                    Wezel temp = korzen.Prawy;
+                    ////NALEZY USUNAC TEZ TLUMACZENIE
+                    throw new NotImplementedException();
+                    korzen.Prawy = temp.Lewy;
+                }
+                if (korzen.Prawy.Prawy != null && korzen.Prawy.Lewy == null)
+                {
+                    Wezel temp = korzen.Prawy;
+                    ////NALEZY USUNAC TEZ TLUMACZENIE
+                    throw new NotImplementedException();
+                    korzen.Prawy = temp.Prawy;
+                }
+                if (korzen.Prawy.Prawy != null && korzen.Prawy.Lewy != null)
+                {
+                    Wezel temp = korzen.Prawy;
+                    Wezel nastepnik = WyszukajNastepce(ref temp);
+                    ////NALEZY USUNAC TEZ TLUMACZENIE
+                    throw new NotImplementedException();
+                    Wezel staraPozycjaNastepnika = nastepnik;
+                    Wezel nastepniknastepnika = WyszukajNastepce(ref staraPozycjaNastepnika);
+                    nastepniknastepnika.Lewy = null;
+                    korzen.Prawy = nastepnik;
+                }
+            }
+            //Rotacje (trzeba zrobić z tego oddzielną funkcje IMHO)
+            if (korzen.Waga == 2)
+            {
+                if (korzen.Lewy.Waga == 1)
+                {
+                    Wezel wezel = korzen;
+                    RotacjaRR(ref wezel);
+                    korzen = wezel;
+                    //ustawianie nowych wag
+                    korzen.Waga = 0;
+                    korzen.Prawy.Waga = 0;
+                }
+                else
+                {
+                    Wezel C = korzen.Lewy.Prawy;
+                    Wezel wezel = korzen.Lewy;
+                    RotacjaLL(ref wezel);
+                    korzen.Lewy = wezel;
+                    wezel = korzen;
+                    RotacjaRR(ref wezel);
+                    korzen= wezel;
+                    //ustawianie nowych wag
+                    switch (C.Waga)
+                    {
+                        case (1):
+
+                            korzen.Prawy.Waga = 0;
+                            korzen.Lewy.Waga = -1;
+                            break;
+                        case (0):
+
+                            korzen.Prawy.Waga = 0;
+                            korzen.Lewy.Waga = 0;
+                            break;
+                        case (-1):
+                            korzen.Prawy.Waga = 1;
+                            korzen.Lewy.Waga = 0;
+                            break;
+
+                    }
+                    korzen.Waga = 0;
+                }
+            }
+            if (korzen.Waga == -2)
+            {
+
+                if (korzen.Prawy.Waga == 1)
+                {
+                    Wezel C = korzen.Prawy.Lewy;
+                    Wezel wezel = korzen.Prawy;
+                    RotacjaRR(ref wezel);
+                    korzen.Prawy = wezel;
+                    wezel = korzen;
+                    RotacjaLL(ref wezel);
+                    korzen = wezel;
+                    //ustawianie nowych wag
+                    switch (C.Waga)
+                    {
+                        case (1):
+
+                            korzen.Prawy.Waga = 0;
+                            korzen.Lewy.Waga = -1;
+                            break;
+                        case (0):
+
+                            korzen.Prawy.Waga = 0;
+                            korzen.Lewy.Waga = 0;
+                            break;
+                        case (-1):
+                            korzen.Prawy.Waga = 1;
+                            korzen.Lewy.Waga = 0;
+                            break;
+
+                    }
+                    korzen.Waga = 0;
+
+                }
+                else
+                {
+                    Wezel wezel = korzen;
+                    RotacjaLL(ref wezel);
+                    //root = (WezelPolski)wezel;
+                    korzen = wezel;
+                    //ustawianie nowych wag
+                    korzen.Waga = 0;
+                    korzen.Lewy.Waga = 0;
+                }
+            }
+
 
 
         }
