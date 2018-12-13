@@ -31,128 +31,6 @@ namespace AVL
 			element.Prawy.Lewy = II;
 		}
 
-/*		public Wezel WstawSlowo(ref Wezel root, string slowo)
-		{
-			//int comparison = slowo.CompareTo(root.Slowo);
-			if (root == null)
-			{
-				root = new Wezel(slowo);
-			}
-			//if (this.korzen == null) //gdy drzewo jeszcze nie jest utworzone
-			//{
-			//    this.korzen = new Wezel(slowo);
-			//}
-			else if (slowo.CompareTo(root.Slowo) < 0)
-			{
-				Wezel lewy = root.Lewy;
-				root.Lewy = WstawSlowo(ref lewy, slowo);
-				root.Waga++;
-			}
-			else if (slowo.CompareTo(root.Slowo) > 0)
-			{
-				Wezel prawy = root.Prawy;
-				root.Prawy = WstawSlowo(ref prawy, slowo);
-				if (true) //MUSI JAKOS SPRAWDZAC CZY WYKONALA SIE REKURENCJA CZY NIE
-				{
-					root.Waga--;
-				}
-
-			}
-			else
-			{
-				throw new Exception("Slowo znajduje sie juz w zbiorze, synonimy sa niedopuszczalne");
-			}
-			if (root.Waga == 2)
-			{
-				if (root.Lewy.Waga == 1)
-				{
-					Wezel wezel = root;
-					RotacjaRR(ref wezel);
-					root = wezel;
-					//ustawianie nowych wag
-					root.Waga = 0;
-					root.Prawy.Waga = 0;
-				}
-				else
-				{
-					Wezel C = root.Lewy.Prawy;
-					Wezel wezel = root.Lewy;
-					RotacjaLL(ref wezel);
-					root.Lewy = wezel;
-					wezel = root;
-					RotacjaRR(ref wezel);
-					root = wezel;
-					//ustawianie nowych wag
-					root.Waga = 0;
-					switch (C.Waga)
-					{
-						case (1):
-
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = -1;
-							break;
-						case (0):
-
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = 0;
-							break;
-						case (-1):
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = 1;
-							break;
-
-					}
-				}
-			}
-			if (root.Waga == -2)
-			{
-
-				if (root.Prawy.Waga == 1)
-				{
-					Wezel C = root.Prawy.Lewy;
-					Wezel wezel = root.Prawy;
-					RotacjaRR(ref wezel);
-					root.Prawy = wezel;
-					wezel = root;
-					RotacjaLL(ref wezel);
-					root = wezel;
-					//ustawianie nowych wag
-					root.Waga = 0;
-					switch (C.Waga)
-					{
-						case (1):
-
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = -1;
-							break;
-						case (0):
-
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = 0;
-							break;
-						case (-1):
-							root.Prawy.Waga = 0;
-							root.Lewy.Waga = 1;
-							break;
-
-					}
-
-				}
-				else
-				{
-					Wezel wezel = root;
-					RotacjaLL(ref wezel);
-					//root = (WezelPolski)wezel;
-					root = wezel;
-					//ustawianie nowych wag
-					root.Waga = 0;
-					root.Lewy.Waga = 0;
-				}
-			}
-			Debug.WriteLine("\t\t{0}", slowo);
-			Debug.WriteLine("\t\t{0}", root.Slowo);
-			return root;
-		}*/
 
 		public void WypiszDrzewo(Wezel korzen)
         {
@@ -179,56 +57,114 @@ namespace AVL
 			//Key is smaller than root's key 	
 			return Wyszukaj(korzen.Lewy, slowo);
 		}
+        public Wezel WyszukajSugarDaddy(ref Wezel korzen, string slowo)
+        {   
+            if(slowo.CompareTo(korzen.Slowo)==0)
+            {
+                //korzen nie ma ojca
+                return null;
+            }
+            if(slowo.CompareTo(korzen.Prawy.Slowo)==0|| slowo.CompareTo(korzen.Lewy.Slowo) == 0)
+            {
+                return korzen;
+            }
+            else
+            {
+                if (korzen.Slowo.CompareTo(slowo) < 0)
+                {
+                    Wezel lewy = korzen.Lewy;
+                    WyszukajSugarDaddy(ref lewy, slowo);
+                    
+                }
+                    
+                if (korzen.Slowo.CompareTo(slowo) > 0)
+                {
+                    Wezel prawy = korzen.Prawy;
+                    WyszukajSugarDaddy(ref prawy, slowo);
+                }
+            }
+            throw new Exception("Nie znaleziono ojca dla szukanego elementu");
 
-		//public Wezel WstawSlowo(ref Wezel root, string slowo)
-		//{
-		//    //int comparison = slowo.CompareTo(root.Slowo);
-		//    if(root == null)
-		//    {
-		//        root = new Wezel(slowo);
-		//    }
-		//    //if (this.korzen == null) //gdy drzewo jeszcze nie jest utworzone
-		//    //{
-		//    //    this.korzen = new Wezel(slowo);
-		//    //}
-		//    else if (slowo.CompareTo(root.Slowo) < 0)
-		//    {
-		//        Wezel lewy = root.Lewy;
-		//        root.Lewy = WstawSlowo(ref lewy, slowo);
-		//        root.Waga++;
-		//    }
-		//    else if (slowo.CompareTo(root.Slowo) > 0)
-		//    {
-		//        Wezel prawy = root.Prawy;
-		//        root.Prawy = WstawSlowo(ref prawy, slowo);
-		//        root.Waga--;
-		//    }
-		//    else
-		//    {
-		//        throw new Exception("Slowo znajduje sie juz w zbiorze, synonimy sa niedopuszczalne");
-		//    }
-		//    //sprawdzanie wag
-		//    if (root.Waga == 0)
-		//        return root;
-		//    if (root.Waga >= 2)
-		//    {
-		//        if (root.Lewy.Waga == 1)
-		//            RotacjaRR(ref root);
-		//        else
-		//            RotacjaLR(ref root);
-		//    }
-		//    if (root.Waga <= -2)
-		//    {
 
-		//        if (root.Prawy.Waga == 1)
-		//            RotacjaRL(ref root);
-		//        else
-		//            RotacjaLL(ref root);
-		//    }
-		//    Debug.WriteLine("\t\t{0}", slowo);
-		//    Debug.WriteLine("\t\t{0}", root.Slowo);
-		//    return root;
-		//}
+        }
+        public Wezel WyszukajNastepce(Wezel korzen)
+        {
+            Wezel nastepca = korzen.Prawy;
+            while(nastepca.Lewy!=null)
+            {
+                nastepca = nastepca.Lewy;
+            }
+            return nastepca;
+        }
+
+        public void UsunSlowo(ref Wezel korzen, string slowo,ref bool ZnalezionoElement, ref bool DrzewoWywazone)
+        {
+
+            //Wyszukaj powinno zwracac czy slowo nieistnieje
+
+            if (korzen == null || slowo.CompareTo(korzen.Slowo) == 0)
+            {
+
+                ZnalezionoElement = true;
+                if (korzen.Prawy == null && korzen.Lewy == null)
+                {
+                    //przypadek gdy usuwany element jest lisciem
+                    korzen = null;
+                    //NALEZY USUNAC TEZ TLUMACZENIE
+                }
+                /*Wezel wezel = korzen;
+                if(WyszukajSugarDaddy(ref wezel,slowo)==null)
+                {
+                    if(korzen.Prawy==null && korzen.Lewy==null)
+                    {
+                        //drzewo jest jednoelementowe
+                        korzen = null;
+                        throw new Exception("Drzewo przestalo istniec");
+                    }
+                }*/
+                return;
+            }
+            // Key is greater than root's key   
+            if (korzen.Slowo.CompareTo(slowo) < 0)
+            {
+                Wezel lewy = korzen.Lewy;
+                bool element = ZnalezionoElement;
+                bool wywazenie = DrzewoWywazone;
+                UsunSlowo(ref lewy, slowo,ref element, ref wywazenie);
+                DrzewoWywazone = wywazenie;
+                ZnalezionoElement = element;
+                if(!DrzewoWywazone)
+                {
+
+                    if (korzen.Lewy.Waga == -1 || korzen.Lewy.Waga == 1)
+                    {
+                        DrzewoWywazone = true;
+                        //dalsze wyważanie nie ma sensu
+                    }
+                    else
+                    {
+                        korzen.Waga--;
+                    }
+                }
+                    
+            }
+            if (ZnalezionoElement)
+            {
+                ZnalezionoElement = false;
+                //Rozpatrujemy przypadek gdy element kasowany nie jest lisciem
+                if(korzen.Lewy.Prawy==null && korzen.Lewy.Lewy!=null)
+                    {
+                        
+                    }
+
+            }
+            //Key is smaller than root's key
+            if (korzen.Slowo.CompareTo(slowo) > 0)
+                return UsunSlowo(korzen.Lewy, slowo,ZnalezionoElement);
+
+
+        }
+
 		public Wezel WstawSlowo(ref Wezel root, string slowo, ref bool CzyBylaRotacja)
 		{
 			if (root == null)
