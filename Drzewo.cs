@@ -31,9 +31,30 @@ namespace AVL
 			element.Prawy.Lewy = II;
 		}
 
-
-		public void WypiszDrzewo(Wezel korzen)
+        /// <summary>
+        /// Wypisuje oba drzewa korzystajac z przypisanych tlumaczen wraz z wagami
+        /// </summary>
+        /// <param name="korzen"></param>
+        public void WypiszDrzewoOrazWagi(Wezel korzen)
         {
+            if (korzen == null)
+                return;
+            Console.WriteLine("slowo: {0} {1}\ttlumaczenie: {2} {3}", korzen.Slowo, korzen.Waga, korzen.Tlumaczenie.Slowo, korzen.Tlumaczenie.Waga);
+            if (korzen.Lewy != null)
+            {
+                WypiszDrzewoOrazWagi(korzen.Lewy);
+                //Console.WriteLine(korzen.Lewy.Slowo);
+            }
+            if (korzen.Prawy != null)
+            {
+                WypiszDrzewoOrazWagi(korzen.Prawy);
+            }
+        }
+
+        public void WypiszDrzewo(Wezel korzen)
+        {
+            if (korzen == null)
+                return;
             Console.WriteLine(korzen.Slowo);
             if (korzen.Lewy != null)
             {

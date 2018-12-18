@@ -9,6 +9,14 @@ namespace AVL
 {
     class Program
     {
+        public static Random rnd = new Random();
+        public static string RandomString(int length)
+        {
+            const string chars = "abcd";
+            //const string chars = "abcdefghijklmnopqrstuvwxyz";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[rnd.Next(s.Length)]).ToArray());
+        }
         static void Main(string[] args)
         {
             DrzewoPolskie p = new DrzewoPolskie();
@@ -26,6 +34,9 @@ namespace AVL
                 Console.WriteLine("4. Wyszukaj slowo angielskie");
                 Console.WriteLine("5. Usun slowo polskie");
                 Console.WriteLine("6. Usun slowo angielskie");
+                Console.WriteLine("7. Wypisz slownik z wagami");
+                Console.WriteLine("8. Dodaj 4 losowe słowa do słownika");
+                Console.WriteLine("9. Usun 2 losowe slowa ze slownika");
                 Console.WriteLine("0. Wyjdz i zapisz zmiany");
                 input = Console.ReadLine();
                 int d;
@@ -213,6 +224,79 @@ namespace AVL
                         watch.Stop();
                         Console.WriteLine("Usunieto wybrany element. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         a.korzen = temp6;
+                        break;
+                    case 7:
+                        a.WypiszDrzewoOrazWagi(a.korzen);
+                        Console.WriteLine();
+                        break;
+                    case 8:
+                        Console.Clear();
+                        for(int i=0;i<4;i++)
+                        {
+                            string rndAng = RandomString(4);
+                            string rndPol = RandomString(4);
+                            Console.WriteLine("\tWstawienie slowa {0}", rndAng);
+                            Wezel temp8 = a.korzen;
+                            bool rotacja8 = false;
+                            try
+                            {
+
+                                a.WstawSlowo(ref temp8, rndAng, ref rotacja8);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                                //break;
+                            }
+                            a.korzen = temp8;
+                            var tempAng = a.Wyszukaj(a.korzen, rndAng);
+                            Wezel temp9 = p.korzen;
+                            bool rotacja9 = false;
+                            try
+                            {
+                                p.WstawSlowo(ref temp9, rndPol, ref rotacja9);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                                //break;
+                            }
+                            p.korzen = temp9;
+                            var tempPol = p.Wyszukaj(p.korzen, rndPol);
+                            tempAng.Tlumaczenie = tempPol;
+                            tempPol.Tlumaczenie = tempAng;
+                            a.WypiszDrzewoOrazWagi(a.korzen);
+                            Console.WriteLine();
+                        }
+                        break;
+                    case 9:
+                        Console.Clear();
+                        //Console.WriteLine("Not implemented yet");
+                        int deleted = 0;
+                        while(deleted !=2)
+                        {
+                            string rnd = RandomString(4);
+                            Wezel temp1337 = a.korzen;
+                            bool znaleziony1337 = false;
+                            bool wywazone1337 = false;
+                            //Console.WriteLine("\tProba usuniecia slowa {0}", rnd);
+                            try
+                            {
+                                a.UsunSlowo(ref temp1337, rnd, ref znaleziony1337, ref wywazone1337, p.korzen);
+                                //Note: it will only print it if no exception was thrown -> it means only if word was found
+                                Console.WriteLine("\t\tUsunieto slowo {0}", rnd);
+                                deleted++;
+                                a.WypiszDrzewoOrazWagi(a.korzen);
+                                Console.WriteLine();
+                            }
+                            //Pomin brak slowa exception - bylo wylosowane
+                            catch (Exception e)
+                            {
+                                //Console.WriteLine(e.Message);
+                                //break;
+                            }
+                            a.korzen = temp1337;
+                        }
                         break;
                 }
                 if (exit)
