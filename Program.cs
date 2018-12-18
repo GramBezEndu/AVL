@@ -12,7 +12,7 @@ namespace AVL
         public static Random rnd = new Random();
         public static string RandomString(int length)
         {
-            const string chars = "abcd";
+            const string chars = "ab";
             //const string chars = "abcdefghijklmnopqrstuvwxyz";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[rnd.Next(s.Length)]).ToArray());
@@ -82,6 +82,8 @@ namespace AVL
                         catch (Exception e)
                         {
                             Console.WriteLine(e.Message);
+                            //Usun wstawione slowo polskie, poniewaz nie mozna wstawic tlumaczenia
+                            throw new NotImplementedException();
                             break;
                         }
                         watch.Stop();
@@ -124,6 +126,8 @@ namespace AVL
                         catch (Exception e)
                         {
                             Console.WriteLine(e.Message);
+                            //Usun wstawione slowo angielskie, poniewaz nie mozna wstawic tlumaczenia
+                            throw new NotImplementedException();
                             break;
                         }
                         watch.Stop();
@@ -259,7 +263,7 @@ namespace AVL
                             catch (Exception e)
                             {
                                 Console.WriteLine(e.Message);
-                                //break;
+                                break;
                             }
                             p.korzen = temp9;
                             var tempPol = p.Wyszukaj(p.korzen, rndPol);

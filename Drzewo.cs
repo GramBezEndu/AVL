@@ -97,6 +97,11 @@ namespace AVL
             {
                 throw new Exception("Nie znaleziono slowa");
             }
+            //Przpadek gdy element ktory chcemy usunac jest korzeniem
+            if(korzen == this.korzen)
+            {
+                throw new NotImplementedException("Nie mozna jeszcze usunac korzenia");
+            }
             if (slowo.CompareTo(korzen.Slowo) == 0) //uwazac na tego bydlaka!
             {
 
