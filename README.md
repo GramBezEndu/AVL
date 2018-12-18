@@ -7,4 +7,3 @@
   slowo: cdcc 0   tlumaczenie: abcb 0
   slowo: bcdd 0   tlumaczenie: caaa 1
   slowo: dbda 0   tlumaczenie: caaa 1
-3. Usuwanie.
