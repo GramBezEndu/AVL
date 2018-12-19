@@ -97,14 +97,79 @@ namespace AVL
             {
                 throw new Exception("Nie znaleziono slowa");
             }
-            //Przpadek gdy element ktory chcemy usunac jest korzeniem
-            if(korzen == this.korzen)
-            {
-                throw new NotImplementedException("Nie mozna jeszcze usunac korzenia");
-            }
             if (slowo.CompareTo(korzen.Slowo) == 0) //uwazac na tego bydlaka!
             {
+                //Przpadek gdy element ktory chcemy usunac jest korzeniem
+                if (korzen == this.korzen)
+                {
+                    if (korzen.Prawy == null && korzen.Lewy == null)
+                    {
+                        //przypadek gdy usuwany element jest lisciem
+                        string tlumaczenie = korzen.Tlumaczenie.Slowo;
+                        korzen = null;
+                        //this.korzen = null;
+                        if (tlumaczenia != null)
+                        {
+                            bool znaleziony = false;
+                            bool wywazone = false;
+                            UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                        }
+                        return;
+                    }
+                    if (korzen.Prawy == null && korzen.Lewy != null)
+                    {
 
+                        Wezel temp = korzen;
+                        string tlumaczenie = temp.Tlumaczenie.Slowo;
+                        korzen = temp.Lewy;
+                        if (tlumaczenia != null)
+                        {
+                            bool znaleziony = false;
+                            bool wywazone = false;
+                            UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+
+                        }
+                        return;
+                    }
+                    if (korzen.Prawy != null && korzen.Lewy == null)
+                    {
+                        Wezel temp = korzen;
+                        string tlumaczenie = temp.Tlumaczenie.Slowo;
+                        korzen = temp.Prawy;
+                        if (tlumaczenia != null)
+                        {
+
+                            bool znaleziony = false;
+                            bool wywazone = false;
+                            UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+
+                        }
+                        return;
+                    }
+                }
+                if (korzen.Prawy != null && korzen.Lewy != null)
+                {
+                    Wezel temp = korzen;
+                    string tlumaczenie = temp.Tlumaczenie.Slowo;
+                    Wezel nastepnik = WyszukajNastepce(temp);
+                    temp.Slowo = nastepnik.Slowo;
+                    temp.Tlumaczenie = nastepnik.Tlumaczenie;
+                    Wezel nowapozycja = temp.Prawy;
+                    bool znaleziony = false;
+                    bool wywazone = false;
+                    UsunSlowo(ref nowapozycja, nastepnik.Slowo, ref znaleziony, ref wywazone, tlumaczenia);
+                    if (tlumaczenia != null)
+                    {
+
+                        bool znaleziony2 = false;
+                        bool wywazone2 = false;
+                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null);
+
+                    }
+                    korzen = temp;
+                    return;
+
+                }
                 ZnalezionoElement = true;
                 return;
             }
