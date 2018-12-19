@@ -194,7 +194,7 @@ namespace AVL
                         Console.WriteLine("Podaj slowo polskie do usuniecia");
                         input = Console.ReadLine();
                         Wezel temp5 = p.korzen;
-                        WezelAngielski tlumaczenie = (WezelAngielski)a.korzen;
+                        Wezel tlumaczenie = a.korzen;
                         bool znaleziony = false;
                         bool wywazone = false;
                         watch = Stopwatch.StartNew();

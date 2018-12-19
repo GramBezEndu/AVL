@@ -10,8 +10,9 @@ namespace AVL
     class Drzewo
     {
         public Wezel korzen;
+        //public virtual object korzen { get; set; }
 
-		public void RotacjaLL(ref Wezel element)
+        public void RotacjaLL(ref Wezel element)
 		{
 			//zmiana pozycji
 			Wezel A = element;
