@@ -9,9 +9,14 @@ namespace AVL
 {
     class Drzewo
     {
+        bool czyWywazone = false;
         public Wezel korzen;
 
-		public void RotacjaLL(ref Wezel element)
+        public bool CzyWywazone { get => czyWywazone; set => czyWywazone = value; }
+
+        //public virtual object korzen { get; set; }
+
+        public void RotacjaLL(ref Wezel element)
 		{
 			//zmiana pozycji
 			Wezel A = element;
@@ -89,7 +94,7 @@ namespace AVL
             return nastepca;
         }
 
-        public void UsunSlowo(ref Wezel korzen, string slowo,ref bool ZnalezionoElement, ref bool DrzewoWywazone,Wezel tlumaczenia)
+        public void UsunSlowo(ref Wezel korzen, string slowo,ref bool ZnalezionoElement, ref bool DrzewoWywazone, Wezel tlumaczenia, Drzewo przeciwne)
         {
 
             //Wyszukaj powinno zwracac czy slowo nieistnieje
@@ -97,14 +102,79 @@ namespace AVL
             {
                 throw new Exception("Nie znaleziono slowa");
             }
-            //Przpadek gdy element ktory chcemy usunac jest korzeniem
-            if(korzen == this.korzen)
-            {
-                throw new NotImplementedException("Nie mozna jeszcze usunac korzenia");
-            }
             if (slowo.CompareTo(korzen.Slowo) == 0) //uwazac na tego bydlaka!
             {
+                //Przpadek gdy element ktory chcemy usunac jest korzeniem
+                if (korzen == this.korzen)
+                {
+                    if (korzen.Prawy == null && korzen.Lewy == null)
+                    {
+                        //przypadek gdy usuwany element jest lisciem
+                        string tlumaczenie = korzen.Tlumaczenie.Slowo;
+                        korzen = null;
+                        //this.korzen = null;
+                        if (tlumaczenia != null)
+                        {
+                            bool znaleziony = false;
+                            bool wywazone = false;
+                            przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
+                        }
+                        return;
+                    }
+                    if (korzen.Prawy == null && korzen.Lewy != null)
+                    {
 
+                        Wezel temp = korzen;
+                        string tlumaczenie = temp.Tlumaczenie.Slowo;
+                        korzen = temp.Lewy;
+                        if (tlumaczenia != null)
+                        {
+                            bool znaleziony = false;
+                            bool wywazone = false;
+                            przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
+
+                        }
+                        return;
+                    }
+                    if (korzen.Prawy != null && korzen.Lewy == null)
+                    {
+                        Wezel temp = korzen;
+                        string tlumaczenie = temp.Tlumaczenie.Slowo;
+                        korzen = temp.Prawy;
+                        if (tlumaczenia != null)
+                        {
+
+                            bool znaleziony = false;
+                            bool wywazone = false;
+                            przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
+
+                        }
+                        return;
+                    }
+                }
+                if (korzen.Prawy != null && korzen.Lewy != null)
+                {
+                    Wezel temp = korzen;
+                    string tlumaczenie = temp.Tlumaczenie.Slowo;
+                    Wezel nastepnik = WyszukajNastepce(temp);
+                    temp.Slowo = nastepnik.Slowo;
+                    temp.Tlumaczenie = nastepnik.Tlumaczenie;
+                    Wezel nowapozycja = temp.Prawy;
+                    bool znaleziony = false;
+                    bool wywazone = false;
+                    UsunSlowo(ref nowapozycja, nastepnik.Slowo, ref znaleziony, ref wywazone, tlumaczenia, przeciwne);
+                    if (tlumaczenia != null)
+                    {
+
+                        bool znaleziony2 = false;
+                        bool wywazone2 = false;
+                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null, null);
+
+                    }
+                    korzen = temp;
+                    return;
+
+                }
                 ZnalezionoElement = true;
                 return;
             }
@@ -114,7 +184,7 @@ namespace AVL
                 Wezel lewy = korzen.Lewy;
                 bool element = ZnalezionoElement;
                 bool wywazenie = DrzewoWywazone;
-                UsunSlowo(ref lewy, slowo,ref element, ref wywazenie,tlumaczenia);
+                UsunSlowo(ref lewy, slowo,ref element, ref wywazenie,tlumaczenia, przeciwne);
                 korzen.Lewy = lewy;
                 DrzewoWywazone = wywazenie;
                 ZnalezionoElement = element;
@@ -141,7 +211,7 @@ namespace AVL
                     {
                         bool znaleziony = false;
                         bool wywazone = false;
-                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
                     }
                     return;
                 }
@@ -155,7 +225,7 @@ namespace AVL
                     {
                         bool znaleziony = false;
                         bool wywazone = false;
-                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
 
                     }
                     return;
@@ -170,7 +240,7 @@ namespace AVL
 
                         bool znaleziony = false;
                         bool wywazone = false;
-                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
 
                     }
                     return;
@@ -185,13 +255,13 @@ namespace AVL
                     Wezel nowapozycja = temp.Prawy;
                     bool znaleziony = false;
                     bool wywazone = false;
-                    UsunSlowo(ref nowapozycja, nastepnik.Slowo,ref znaleziony,ref wywazone,tlumaczenia);
+                    UsunSlowo(ref nowapozycja, nastepnik.Slowo,ref znaleziony,ref wywazone,tlumaczenia,przeciwne);
                     if (tlumaczenia != null)
                     {
 
                         bool znaleziony2 = false;
                         bool wywazone2 = false;
-                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null);
+                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null, null);
 
                     }
                     korzen.Lewy = temp;
@@ -205,7 +275,7 @@ namespace AVL
                 Wezel prawy = korzen.Prawy;
                 bool element = ZnalezionoElement;
                 bool wywazenie = DrzewoWywazone;
-                UsunSlowo(ref prawy, slowo, ref element, ref wywazenie,tlumaczenia);
+                UsunSlowo(ref prawy, slowo, ref element, ref wywazenie,tlumaczenia, przeciwne);
                 korzen.Prawy = prawy;
                 DrzewoWywazone = wywazenie;
                 ZnalezionoElement = element;
@@ -232,7 +302,7 @@ namespace AVL
                     {
                         bool znaleziony = false;
                         bool wywazone = false;
-                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
                     }
                     return;
                 }
@@ -245,7 +315,7 @@ namespace AVL
                     {
                         bool znaleziony = false;
                         bool wywazone = false;
-                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
                     }
                     return;
                 }
@@ -259,7 +329,7 @@ namespace AVL
                     {
                         bool znaleziony = false;
                         bool wywazone = false;
-                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null);
+                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
                     }
                     return;
                 }
@@ -273,13 +343,13 @@ namespace AVL
                     Wezel nowapozycja = temp.Prawy;
                     bool znaleziony = false;
                     bool wywazone = false;
-                    UsunSlowo(ref nowapozycja, nastepnik.Slowo, ref znaleziony, ref wywazone, tlumaczenia);
+                    UsunSlowo(ref nowapozycja, nastepnik.Slowo, ref znaleziony, ref wywazone, tlumaczenia, przeciwne);
                     if (tlumaczenia != null)
                     {
 
                         bool znaleziony2 = false;
                         bool wywazone2 = false;
-                        UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null);
+                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null, null);
 
                     }
                     korzen.Prawy = temp;
@@ -391,13 +461,16 @@ namespace AVL
 				bool rotacja = CzyBylaRotacja;
 				root.Lewy = WstawSlowo(ref lewy, slowo, ref rotacja);
 				CzyBylaRotacja = rotacja;
-                if (CzyBylaRotacja == true && root.Lewy.Waga == 0) //We wstawianiu rotacja wykona sie tylko raz
-                {
+                if (this.czyWywazone == false && CzyBylaRotacja==false)
+                    root.Waga++;
 
+                if (root.Waga == 0) //We wstawianiu rotacja wykona sie tylko raz
+                {
+                    this.czyWywazone = true;
                 }
                 else
                 {
-                    root.Waga++;
+
                 }
             }
 			else if (slowo.CompareTo(root.Slowo) > 0)
@@ -406,15 +479,17 @@ namespace AVL
 				bool rotacja = CzyBylaRotacja;
 				root.Prawy = WstawSlowo(ref prawy, slowo, ref rotacja);
 				CzyBylaRotacja = rotacja;
-                if (CzyBylaRotacja == true && root.Prawy.Waga==0) //We wstawianiu rotacja wykona sie tylko raz
-				{
-				
-				}
+                if (this.czyWywazone == false && CzyBylaRotacja == false)
+                    root.Waga--;
+
+                if (root.Waga == 0) //We wstawianiu rotacja wykona sie tylko raz
+                {
+                    this.czyWywazone = true;
+                }
                 else
                 {
-                    root.Waga--;
-                }
 
+                }
 			}
 			else
 			{
@@ -438,7 +513,7 @@ namespace AVL
 				}
 				else
 				{
-					Wezel C = root.Lewy.Prawy;
+                    Wezel C = root.Lewy.Prawy;
 					Wezel wezel = root.Lewy;
 					CzyBylaRotacja = true;
 					RotacjaLL(ref wezel);
@@ -473,7 +548,7 @@ namespace AVL
 
 				if (root.Prawy.Waga == 1)
 				{
-					Wezel C = root.Prawy.Lewy;
+                    Wezel C = root.Prawy.Lewy;
 					Wezel wezel = root.Prawy;
 					CzyBylaRotacja = true;
 					RotacjaRR(ref wezel);
@@ -505,7 +580,7 @@ namespace AVL
                 }
 				else
 				{
-					Wezel wezel = root;
+                    Wezel wezel = root;
 					CzyBylaRotacja = true;
 					RotacjaLL(ref wezel);
 					//root = (WezelPolski)wezel;

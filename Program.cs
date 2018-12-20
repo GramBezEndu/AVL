@@ -12,7 +12,7 @@ namespace AVL
         public static Random rnd = new Random();
         public static string RandomString(int length)
         {
-            const string chars = "ab";
+            const string chars = "abcde";
             //const string chars = "abcdefghijklmnopqrstuvwxyz";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[rnd.Next(s.Length)]).ToArray());
@@ -53,6 +53,7 @@ namespace AVL
                     case 1:
                         Console.WriteLine("Podaj slowo polskie");
                         input = Console.ReadLine();
+                        p.CzyWywazone = false;
                         Wezel temp = p.korzen;
                         bool rotacja = false;
                         watch = Stopwatch.StartNew();
@@ -97,6 +98,7 @@ namespace AVL
                     case 2:
                         Console.WriteLine("Podaj slowo angielskie");
                         input = Console.ReadLine();
+                        a.CzyWywazone = false;
                         Wezel temp3 = a.korzen;
                         bool rotacja3 = false;
                         watch = Stopwatch.StartNew();
@@ -194,11 +196,12 @@ namespace AVL
                         Console.WriteLine("Podaj slowo polskie do usuniecia");
                         input = Console.ReadLine();
                         Wezel temp5 = p.korzen;
+                        Wezel tlumaczenie = a.korzen;
                         bool znaleziony = false;
                         bool wywazone = false;
                         watch = Stopwatch.StartNew();
                         try{
-                            p.UsunSlowo(ref temp5, input, ref znaleziony, ref wywazone, a.korzen);
+                            p.UsunSlowo(ref temp5, input, ref znaleziony, ref wywazone, tlumaczenie,a);
                         }
                        catch(Exception e)
                         {
@@ -218,7 +221,7 @@ namespace AVL
                         watch = Stopwatch.StartNew();
                         try
                         {
-                            a.UsunSlowo(ref temp6, input, ref znaleziony2, ref wywazone2, p.korzen);
+                            a.UsunSlowo(ref temp6, input, ref znaleziony2, ref wywazone2, p.korzen,p);
                         }
                         catch (Exception e)
                         {
@@ -237,6 +240,8 @@ namespace AVL
                         Console.Clear();
                         for(int i=0;i<4;i++)
                         {
+                            a.CzyWywazone = false;
+                            p.CzyWywazone = false;
                             string rndAng = RandomString(4);
                             string rndPol = RandomString(4);
                             Console.WriteLine("\tWstawienie slowa {0}", rndAng);
@@ -286,7 +291,7 @@ namespace AVL
                             //Console.WriteLine("\tProba usuniecia slowa {0}", rnd);
                             try
                             {
-                                a.UsunSlowo(ref temp1337, rnd, ref znaleziony1337, ref wywazone1337, p.korzen);
+                                a.UsunSlowo(ref temp1337, rnd, ref znaleziony1337, ref wywazone1337, p.korzen, p);
                                 //Note: it will only print it if no exception was thrown -> it means only if word was found
                                 Console.WriteLine("\t\tUsunieto slowo {0}", rnd);
                                 deleted++;
