@@ -45,6 +45,8 @@ namespace AVL
                 wr = new StreamWriter("InOut0401.txt");
                 wrInitialised = true;
             }
+            if (korzen == null)
+                return;
             if (korzen.Tlumaczenie == null)
                 Console.WriteLine("Brak tlumaczenia dla {0}, nie zostało ono wypisane w pliku wyjsciowym", korzen.Slowo);
             else

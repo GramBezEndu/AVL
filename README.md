@@ -1,3 +1,4 @@
 # AVL
 
-1. Zmienić kolejność wypisywania na KLP
+1. Rozpatrzenie usuwania korzenia
+2. [BUG]Dodanie słowa, którego tłumaczenie jest już na drzewie tłumaczeń jest możliwe.

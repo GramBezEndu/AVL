@@ -112,7 +112,7 @@ namespace AVL
                         //przypadek gdy usuwany element jest lisciem
                         string tlumaczenie = korzen.Tlumaczenie.Slowo;
                         korzen = null;
-                        //this.korzen = null;
+                        this.korzen = null;
                         if (tlumaczenia != null)
                         {
                             bool znaleziony = false;

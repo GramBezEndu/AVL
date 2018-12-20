@@ -216,12 +216,13 @@ namespace AVL
                         Console.WriteLine("Podaj slowo angielskie do usuniecia");
                         input = Console.ReadLine();
                         Wezel temp6 = a.korzen;
+                        Wezel tlumaczenie2 = p.korzen;
                         bool znaleziony2 = false;
                         bool wywazone2 = false;
                         watch = Stopwatch.StartNew();
                         try
                         {
-                            a.UsunSlowo(ref temp6, input, ref znaleziony2, ref wywazone2, p.korzen,p);
+                            a.UsunSlowo(ref temp6, input, ref znaleziony2, ref wywazone2, tlumaczenie2,p);
                         }
                         catch (Exception e)
                         {
