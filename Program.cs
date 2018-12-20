@@ -201,7 +201,7 @@ namespace AVL
                         bool wywazone = false;
                         watch = Stopwatch.StartNew();
                         try{
-                            p.UsunSlowo(ref temp5, input, ref znaleziony, ref wywazone, tlumaczenie,a);
+                            p.UsunSlowo(ref temp5, input, ref znaleziony, ref wywazone, ref tlumaczenie,a);
                         }
                        catch(Exception e)
                         {
@@ -211,6 +211,7 @@ namespace AVL
                         watch.Stop();
                         Console.WriteLine("Usunieto wybrany element. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         p.korzen=temp5;
+                        a.korzen = tlumaczenie;
                         break;
                     case 6:
                         Console.WriteLine("Podaj slowo angielskie do usuniecia");
@@ -222,7 +223,7 @@ namespace AVL
                         watch = Stopwatch.StartNew();
                         try
                         {
-                            a.UsunSlowo(ref temp6, input, ref znaleziony2, ref wywazone2, tlumaczenie2,p);
+                            a.UsunSlowo(ref temp6, input, ref znaleziony2, ref wywazone2, ref tlumaczenie2,p);
                         }
                         catch (Exception e)
                         {
@@ -232,6 +233,7 @@ namespace AVL
                         watch.Stop();
                         Console.WriteLine("Usunieto wybrany element. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         a.korzen = temp6;
+                        p.korzen = tlumaczenie2;
                         break;
                     case 7:
                         a.WypiszDrzewoOrazWagi(a.korzen);
@@ -287,12 +289,13 @@ namespace AVL
                         {
                             string rnd = RandomString(4);
                             Wezel temp1337 = a.korzen;
+                            Wezel tlum3 = p.korzen;
                             bool znaleziony1337 = false;
                             bool wywazone1337 = false;
                             //Console.WriteLine("\tProba usuniecia slowa {0}", rnd);
                             try
                             {
-                                a.UsunSlowo(ref temp1337, rnd, ref znaleziony1337, ref wywazone1337, p.korzen, p);
+                                a.UsunSlowo(ref temp1337, rnd, ref znaleziony1337, ref wywazone1337, ref tlum3, p);
                                 //Note: it will only print it if no exception was thrown -> it means only if word was found
                                 Console.WriteLine("\t\tUsunieto slowo {0}", rnd);
                                 deleted++;
@@ -306,6 +309,7 @@ namespace AVL
                                 //break;
                             }
                             a.korzen = temp1337;
+                            p.korzen = tlum3;
                         }
                         break;
                 }
