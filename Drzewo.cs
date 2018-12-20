@@ -112,14 +112,14 @@ namespace AVL
                         //przypadek gdy usuwany element jest lisciem
                         string tlumaczenie = korzen.Tlumaczenie.Slowo;
                         korzen = null;
-                        //this.korzen = null;
+                        this.korzen = null;
                         if (tlumaczenia != null)
                         {
                             bool znaleziony = false;
                             bool wywazone = false;
                             przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
-                        }
-                        return;
+                    }
+                    return;
                     }
                     if (korzen.Prawy == null && korzen.Lewy != null)
                     {
@@ -127,6 +127,7 @@ namespace AVL
                         Wezel temp = korzen;
                         string tlumaczenie = temp.Tlumaczenie.Slowo;
                         korzen = temp.Lewy;
+
                         if (tlumaczenia != null)
                         {
                             bool znaleziony = false;
