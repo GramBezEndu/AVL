@@ -23,6 +23,8 @@ namespace AVL
 			string[] substrings = s.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             for(int i=0;i<substrings.Count();i+=2)
             {
+                a.CzyWywazone = false;
+                p.CzyWywazone = false;
                 rotacja = false;
                 Debug.WriteLine("\t i={0}, substrings[i]={1}", i, substrings[i]);
                 a.WstawSlowo(ref a.korzen, substrings[i], ref rotacja);

@@ -211,7 +211,6 @@ namespace AVL
                         watch.Stop();
                         Console.WriteLine("Usunieto wybrany element. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         p.korzen=temp5;
-                        //a.korzen = tlumaczenie;
                         break;
                     case 6:
                         Console.WriteLine("Podaj slowo angielskie do usuniecia");
@@ -233,7 +232,6 @@ namespace AVL
                         watch.Stop();
                         Console.WriteLine("Usunieto wybrany element. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         a.korzen = temp6;
-                        //p.korzen = tlumaczenie2;
                         break;
                     case 7:
                         a.WypiszDrzewoOrazWagi(a.korzen);

@@ -118,8 +118,8 @@ namespace AVL
                             bool znaleziony = false;
                             bool wywazone = false;
                             przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony, ref wywazone, null, null);
-                    }
-                    return;
+                        }
+                        return;
                     }
                     if (korzen.Prawy == null && korzen.Lewy != null)
                     {
@@ -127,7 +127,6 @@ namespace AVL
                         Wezel temp = korzen;
                         string tlumaczenie = temp.Tlumaczenie.Slowo;
                         korzen = temp.Lewy;
-
                         if (tlumaczenia != null)
                         {
                             bool znaleziony = false;
@@ -152,29 +151,29 @@ namespace AVL
                         }
                         return;
                     }
-                }
-                if (korzen.Prawy != null && korzen.Lewy != null)
-                {
-                    Wezel temp = korzen;
-                    string tlumaczenie = temp.Tlumaczenie.Slowo;
-                    Wezel nastepnik = WyszukajNastepce(temp);
-                    temp.Slowo = nastepnik.Slowo;
-                    temp.Tlumaczenie = nastepnik.Tlumaczenie;
-                    Wezel nowapozycja = temp.Prawy;
-                    bool znaleziony = false;
-                    bool wywazone = false;
-                    UsunSlowo(ref nowapozycja, nastepnik.Slowo, ref znaleziony, ref wywazone, tlumaczenia, przeciwne);
-                    if (tlumaczenia != null)
+                    if (korzen.Prawy != null && korzen.Lewy != null)
                     {
+                        Wezel temp = korzen;
+                        string tlumaczenie = temp.Tlumaczenie.Slowo;
+                        Wezel nastepnik = WyszukajNastepce(temp);
+                        temp.Slowo = nastepnik.Slowo;
+                        temp.Tlumaczenie = nastepnik.Tlumaczenie;
+                        Wezel nowapozycja = temp.Prawy;
+                        bool znaleziony = false;
+                        bool wywazone = false;
+                        UsunSlowo(ref nowapozycja, nastepnik.Slowo, ref znaleziony, ref wywazone, tlumaczenia, przeciwne);
+                        if (tlumaczenia != null)
+                        {
 
-                        bool znaleziony2 = false;
-                        bool wywazone2 = false;
-                        przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null, null);
+                            bool znaleziony2 = false;
+                            bool wywazone2 = false;
+                            przeciwne.UsunSlowo(ref tlumaczenia, tlumaczenie, ref znaleziony2, ref wywazone2, null, null);
+
+                        }
+                        korzen = temp;
+                        return;
 
                     }
-                    korzen = temp;
-                    return;
-
                 }
                 ZnalezionoElement = true;
                 return;
