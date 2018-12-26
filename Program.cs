@@ -12,7 +12,7 @@ namespace AVL
         public static Random rnd = new Random();
         public static string RandomString(int length)
         {
-            const string chars = "abcde";
+            const string chars = "abcdefghijklmn";
             //const string chars = "abcdefghijklmnopqrstuvwxyz";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[rnd.Next(s.Length)]).ToArray());
@@ -24,7 +24,6 @@ namespace AVL
             IOManager ioManager = new IOManager();
             ioManager.WczytajSlowa(a, p);
             string input;
-            Stopwatch watch;
             bool exit = false;
             while (true)
             {
@@ -34,7 +33,7 @@ namespace AVL
                 Console.WriteLine("4. Wyszukaj slowo angielskie");
                 Console.WriteLine("5. Usun slowo polskie");
                 Console.WriteLine("6. Usun slowo angielskie");
-                Console.WriteLine("7. Wypisz slownik z wagami");
+                Console.WriteLine("7. Wypisz slownik");
                 Console.WriteLine("8. Dodaj 4 losowe słowa do słownika");
                 Console.WriteLine("9. Usun 2 losowe slowa ze slownika");
                 Console.WriteLine("0. Wyjdz i zapisz zmiany");
@@ -53,14 +52,11 @@ namespace AVL
                     case 1:
                         Console.WriteLine("Podaj slowo polskie");
                         input = Console.ReadLine();
-                        p.CzyWywazone = false;
+						string oldInput = input;
                         Wezel temp = p.korzen;
-                        bool rotacja = false;
-                        watch = Stopwatch.StartNew();
                         try
                         {
-
-                            p.WstawSlowo(ref temp, input, ref rotacja);
+                            temp = p.WstawSlowo(temp, input);
                         }
                         catch (Exception e)
                         {
@@ -68,27 +64,23 @@ namespace AVL
                             break;
                         }
                         p.korzen = temp;
-                        watch.Stop();
-                        Console.WriteLine("Dodano. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
-                        var pol = p.Wyszukaj(p.korzen, input);
+						var pol = p.Wyszukaj(p.korzen, input);
                         Console.WriteLine("Podaj tlumaczenie");
                         input = Console.ReadLine();
                         Wezel temp2 = a.korzen;
-                        bool rotacja2 = false;
-                        watch = Stopwatch.StartNew();
                         try
                         {
-                            a.WstawSlowo(ref temp2, input, ref rotacja2);
+                            temp2 = a.WstawSlowo(temp2, input);
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine(e.Message);
-                            //Usun wstawione slowo polskie, poniewaz nie mozna wstawic tlumaczenia
-                            throw new NotImplementedException();
+							//Usun wstawione slowo polskie, poniewaz nie mozna wstawic tlumaczenia
+							temp = p.UsunSlowo(temp, oldInput);
+							p.korzen = temp;
+                            //throw new NotImplementedException();
                             break;
                         }
-                        watch.Stop();
-                        Console.WriteLine("Dodano. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         a.korzen = temp2;
                         var ang = a.Wyszukaj(a.korzen, input);
                         ang.Tlumaczenie = pol;
@@ -98,14 +90,11 @@ namespace AVL
                     case 2:
                         Console.WriteLine("Podaj slowo angielskie");
                         input = Console.ReadLine();
-                        a.CzyWywazone = false;
+						string oldInput2 = input;
                         Wezel temp3 = a.korzen;
-                        bool rotacja3 = false;
-                        watch = Stopwatch.StartNew();
                         try
                         {
-
-                            a.WstawSlowo(ref temp3, input, ref rotacja3);
+							temp3 = a.WstawSlowo(temp3, input);
                         }
                         catch (Exception e)
                         {
@@ -113,27 +102,23 @@ namespace AVL
                             break;
                         }
                         a.korzen = temp3;
-                        watch.Stop();
-                        Console.WriteLine("Dodano. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         var ang1 = a.Wyszukaj(a.korzen, input);
                         Console.WriteLine("Podaj tlumaczenie");
                         input = Console.ReadLine();
                         Wezel temp4 = p.korzen;
-                        bool rotacja4 = false;
-                        watch = Stopwatch.StartNew();
                         try
                         {
-                            p.WstawSlowo(ref temp4, input, ref rotacja4);
+                            temp4 = p.WstawSlowo(temp4, input);
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine(e.Message);
-                            //Usun wstawione slowo angielskie, poniewaz nie mozna wstawic tlumaczenia
-                            throw new NotImplementedException();
+							//Usun wstawione slowo angielskie, poniewaz nie mozna wstawic tlumaczenia
+							temp3 = a.UsunSlowo(temp3, oldInput2);
+							a.korzen = temp3;
+                            //throw new NotImplementedException();
                             break;
                         }
-                        watch.Stop();
-                        Console.WriteLine("Dodano. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         p.korzen = temp4;
                         var pol1 = p.Wyszukaj(p.korzen, input);
                         ang1.Tlumaczenie = pol1;
@@ -143,9 +128,7 @@ namespace AVL
                     case 3:
                         Console.WriteLine("Podaj slowo angielskie");
                         input = Console.ReadLine();
-                        watch = Stopwatch.StartNew();
                         var ang2 = a.Wyszukaj(a.korzen, input);
-                        watch.Stop();
                         if (ang2 == null)
                         {
                             Console.WriteLine("Podane slowo angielskie nie istnieje");
@@ -153,7 +136,6 @@ namespace AVL
                         }
                         else
                         {
-                            Console.WriteLine("Wyszukano. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                             if (ang2.Tlumaczenie == null)
                             {
                                 Console.WriteLine("Podane slowo nie ma tlumaczenia");
@@ -169,9 +151,7 @@ namespace AVL
                     case 4:
                         Console.WriteLine("Podaj slowo polskie");
                         input = Console.ReadLine();
-                        watch = Stopwatch.StartNew();
                         var pol3 = p.Wyszukaj(p.korzen, input);
-                        watch.Stop();
                         if (pol3 == null)
                         {
                             Console.WriteLine("Podane slowo polskie nie istnieje");
@@ -179,7 +159,6 @@ namespace AVL
                         }
                         else
                         {
-                            Console.WriteLine("Wyszukano. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                             if (pol3.Tlumaczenie == null)
                             {
                                 Console.WriteLine("Podane slowo nie ma tlumaczenia");
@@ -197,109 +176,123 @@ namespace AVL
                         input = Console.ReadLine();
                         Wezel temp5 = p.korzen;
                         Wezel tlumaczenie = a.korzen;
-                        bool znaleziony = false;
-                        bool wywazone = false;
-                        watch = Stopwatch.StartNew();
-                        try{
-                            p.UsunSlowo(ref temp5, input, ref znaleziony, ref wywazone, ref tlumaczenie,a);
+						var szukane = p.Wyszukaj(p.korzen, input);
+						var tlum = szukane.Tlumaczenie;
+                        try
+						{
+                            temp5 = p.UsunSlowo(temp5, input);
                         }
                        catch(Exception e)
                         {
                             Console.WriteLine(e.Message);
                             break;
                         }
-                        watch.Stop();
-                        Console.WriteLine("Usunieto wybrany element. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         p.korzen=temp5;
-                        a.korzen = tlumaczenie;
+						try
+						{
+							tlumaczenie = a.UsunSlowo(tlumaczenie, tlum.Slowo);
+						}
+						catch (Exception e)
+						{
+							Console.WriteLine(e.Message);
+							break;
+						}
+						a.korzen = tlumaczenie;
                         break;
                     case 6:
                         Console.WriteLine("Podaj slowo angielskie do usuniecia");
                         input = Console.ReadLine();
                         Wezel temp6 = a.korzen;
                         Wezel tlumaczenie2 = p.korzen;
-                        bool znaleziony2 = false;
-                        bool wywazone2 = false;
-                        watch = Stopwatch.StartNew();
+						var szukane2 = a.Wyszukaj(a.korzen, input);
+						var tlum2 = szukane2.Tlumaczenie;
                         try
                         {
-                            a.UsunSlowo(ref temp6, input, ref znaleziony2, ref wywazone2, ref tlumaczenie2,p);
+                            temp6 = a.UsunSlowo(temp6, input);
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine(e.Message);
                             break;
                         }
-                        watch.Stop();
-                        Console.WriteLine("Usunieto wybrany element. Zajelo to: {0} milisekund", (double)watch.ElapsedMilliseconds);
                         a.korzen = temp6;
-                        p.korzen = tlumaczenie2;
+						try
+						{
+							tlumaczenie2 = p.UsunSlowo(tlumaczenie2, input);
+						}
+						catch (Exception e)
+						{
+							Console.WriteLine(e.Message);
+							break;
+						}
+						p.korzen = tlumaczenie2;
                         break;
                     case 7:
-                        a.WypiszDrzewoOrazWagi(a.korzen);
+                        a.WypiszDrzewoOrazTlumaczenia(a.korzen);
                         Console.WriteLine();
                         break;
                     case 8:
                         Console.Clear();
                         for(int i=0;i<4;i++)
                         {
-                            a.CzyWywazone = false;
-                            p.CzyWywazone = false;
-                            string rndAng = RandomString(4);
-                            string rndPol = RandomString(4);
+                            string rndAng = RandomString(rnd.Next(1,4));
+                            string rndPol = RandomString(rnd.Next(1,4));
                             Console.WriteLine("\tWstawienie slowa {0}", rndAng);
                             Wezel temp8 = a.korzen;
-                            bool rotacja8 = false;
                             try
                             {
-
-                                a.WstawSlowo(ref temp8, rndAng, ref rotacja8);
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e.Message);
-                                //break;
-                            }
-                            a.korzen = temp8;
-                            var tempAng = a.Wyszukaj(a.korzen, rndAng);
-                            Wezel temp9 = p.korzen;
-                            bool rotacja9 = false;
-                            try
-                            {
-                                p.WstawSlowo(ref temp9, rndPol, ref rotacja9);
+                                temp8 = a.WstawSlowo(temp8, rndAng);
                             }
                             catch (Exception e)
                             {
                                 Console.WriteLine(e.Message);
                                 break;
                             }
+                            a.korzen = temp8;
+                            var tempAng = a.Wyszukaj(a.korzen, rndAng);
+                            Wezel temp9 = p.korzen;
+                            try
+                            {
+                                temp9 = p.WstawSlowo(temp9, rndPol);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+								//Usuwanie slowa pierwotnego -> nie mozna wstawic tlumaczenia
+								temp8 = a.UsunSlowo(temp8, rndAng);
+								a.korzen = temp8;
+								break;
+                            }
                             p.korzen = temp9;
                             var tempPol = p.Wyszukaj(p.korzen, rndPol);
                             tempAng.Tlumaczenie = tempPol;
                             tempPol.Tlumaczenie = tempAng;
-                            a.WypiszDrzewoOrazWagi(a.korzen);
+                            a.WypiszDrzewoOrazTlumaczenia(a.korzen);
                             Console.WriteLine();
                         }
                         break;
                     case 9:
                         Console.Clear();
-                        //Console.WriteLine("Not implemented yet");
                         int deleted = 0;
                         while(deleted !=2)
                         {
-                            string rnd = RandomString(4);
+                            string rnd1 = RandomString(rnd.Next(1,4));
                             Wezel temp1337 = a.korzen;
                             Wezel tlum3 = p.korzen;
-                            bool znaleziony1337 = false;
-                            bool wywazone1337 = false;
                             //Console.WriteLine("\tProba usuniecia slowa {0}", rnd);
                             try
                             {
-                                a.UsunSlowo(ref temp1337, rnd, ref znaleziony1337, ref wywazone1337, ref tlum3, p);
-                                //Note: it will only print it if no exception was thrown -> it means only if word was found
-                                Console.WriteLine("\t\tUsunieto slowo {0}", rnd);
+								var szukane3 = a.Wyszukaj(a.korzen, rnd1);
+								var tl3 = szukane3.Tlumaczenie;
+                                temp1337 = a.UsunSlowo(temp1337, rnd1);
+								a.korzen = temp1337;
+
+								tlum3 = p.UsunSlowo(tlum3, tl3.Slowo);
+								p.korzen = tlum3;
+								//Note: it will only print it if no exception was thrown -> it means only if word was found
+								Console.WriteLine("\t\tUsunieto slowo {0}", rnd1);
                                 deleted++;
-                                a.WypiszDrzewoOrazWagi(a.korzen);
+                                a.WypiszDrzewoOrazTlumaczenia(a.korzen);
                                 Console.WriteLine();
                             }
                             //Pomin brak slowa exception - bylo wylosowane
@@ -308,8 +301,6 @@ namespace AVL
                                 //Console.WriteLine(e.Message);
                                 //break;
                             }
-                            a.korzen = temp1337;
-                            p.korzen = tlum3;
                         }
                         break;
                 }
