@@ -8,5 +8,17 @@ namespace AVL
 {
     class DrzewoAngielskie : Drzewo
     {
+        //public WezelAngielski ang;
+        //public override object korzen
+        //{
+        //    get
+        //    {
+        //        return this.ang;
+        //    }
+        //    set
+        //    {
+        //        this.ang = value;
+        //    }
+        //}
     }
 }
